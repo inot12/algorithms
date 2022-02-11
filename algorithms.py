@@ -88,7 +88,7 @@ def merge_sort_recursive(a):
     output array in sorted order. It accounts for arrays with duplicates and
     with only distinct elements. Recursion sorting is faster!
     Empty array and array of length=1 are actually the basic recursion case.
-    Compared to the RealPython implmentation, .remove() is the bottleneck.
+    Compared to the RealPython implmentation, it is still slightly slower.
     """
     if len(a) <= 1:
         return a
@@ -98,27 +98,26 @@ def merge_sort_recursive(a):
         n = int(len(a) / 2 + 1)
     left_array = a[:n]
     right_array = a[n:]
-    left_recursion = merge_sort_recursive(left_array)
-    right_recursion = merge_sort_recursive(right_array)
+    left_half = merge_sort_recursive(left_array)
+    right_half = merge_sort_recursive(right_array)
 
     sorted_output = []
-    while len(left_recursion) + len(right_recursion) > 0:
-        if len(left_recursion) == 0 or len(right_recursion) == 0:
-            if len(left_recursion) == 0:
-                sorted_output.append(right_recursion[0])
-                right_recursion.remove(right_recursion[0])
+    left_index = right_index = 0
+    while len(left_half) + len(right_half) > len(sorted_output):
+        if len(left_half) == left_index or len(right_half) == right_index:
+            if len(left_half) == left_index:
+                sorted_output += right_half[right_index:]
             else:
-                sorted_output.append(left_recursion[0])
-                left_recursion.remove(left_recursion[0])
+                sorted_output += left_half[left_index:]
             continue
-        left_min = left_recursion[0]
-        right_min = right_recursion[0]
+        left_min = left_half[left_index]
+        right_min = right_half[right_index]
         if left_min < right_min:
             sorted_output.append(left_min)
-            left_recursion.remove(left_min)
+            left_index += 1
         else:
             sorted_output.append(right_min)
-            right_recursion.remove(right_min)
+            right_index += 1
 
     return sorted_output
 
