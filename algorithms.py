@@ -98,27 +98,27 @@ def merge_sort_recursive(a):
         n = int(len(a) / 2 + 1)
     left_array = a[:n]
     right_array = a[n:]
-    left_rec = merge_sort_recursive(left_array)
-    right_rec = merge_sort_recursive(right_array)
+    left_recursion = merge_sort_recursive(left_array)
+    right_recursion = merge_sort_recursive(right_array)
 
     sorted_output = []
-    while len(left_rec) + len(right_rec) > 0:
-        if len(left_rec) == 0 or len(right_rec) == 0:
-            if len(left_rec) == 0:
-                sorted_output.append(right_rec[0])
-                right_rec.remove(right_rec[0])
+    while len(left_recursion) + len(right_recursion) > 0:
+        if len(left_recursion) == 0 or len(right_recursion) == 0:
+            if len(left_recursion) == 0:
+                sorted_output.append(right_recursion[0])
+                right_recursion.remove(right_recursion[0])
             else:
-                sorted_output.append(left_rec[0])
-                left_rec.remove(left_rec[0])
+                sorted_output.append(left_recursion[0])
+                left_recursion.remove(left_recursion[0])
             continue
-        left_min = left_rec[0]
-        right_min = right_rec[0]
+        left_min = left_recursion[0]
+        right_min = right_recursion[0]
         if left_min < right_min:
             sorted_output.append(left_min)
-            left_rec.remove(left_min)
+            left_recursion.remove(left_min)
         else:
             sorted_output.append(right_min)
-            right_rec.remove(right_min)
+            right_recursion.remove(right_min)
 
     return sorted_output
 
