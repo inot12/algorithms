@@ -31,8 +31,7 @@ def karatsuba(x, y):
 
 
 def merge_sort_min(a):
-    """Merge sort algorithm is a standard sorting algorithm.
-
+    """
     Input:
     a -- unsorted array of n numbers
     returns: same array, sorted
@@ -40,9 +39,7 @@ def merge_sort_min(a):
     This algorithm splits the array in half and copies those halves into two
     new arrays. Then it finds the lowest element in each array with the min()
     function. It merges the sorted arrays by copying over and populating the
-    output array in sorted order. It accounts for arrays with duplicates and
-    with only distinct elements. min() is slower than recursion!
-    Empty array and array of length=1 are actually the basic recursion case.
+    output array in sorted order. min() is slower than recursion!
     """
     if len(a) <= 1:
         return a
@@ -65,7 +62,7 @@ def merge_sort_min(a):
             continue
         left_min = min(left_array)
         right_min = min(right_array)
-        if left_min < right_min:
+        if left_min <= right_min:
             sorted_output.append(left_min)
             left_array.remove(left_min)
         else:
@@ -76,7 +73,7 @@ def merge_sort_min(a):
 
 
 def merge_sort_recursive(a):
-    """Merge sort algorithm is a standard sorting algorithm.
+    """Merge sort algorithm is a standard sorting algorithm with O(n*log(n)).
 
     Input:
     a -- unsorted array of n numbers
@@ -86,9 +83,13 @@ def merge_sort_recursive(a):
     new arrays. Then it solves both halves recursively and combines the
     results. It merges the sorted arrays by copying over and populating the
     output array in sorted order. It accounts for arrays with duplicates and
-    with only distinct elements. Recursion sorting is faster!
-    Empty array and array of length=1 are actually the basic recursion case.
-    Compared to the RealPython implmentation, it is still slightly slower.
+    with only distinct elements. Uses less or equal when comparing minimum
+    values in left_half and righ_half to ensure that the duplicate from
+    left_half is appended to sorted_output first. This is crucial for
+    count_inversions to work as intended when it uses this subroutine. Empty
+    array and array of length=1 are actually the basic recursion case.
+    Recursion sort is faster than min sort! Compared to the RealPython
+    implmentation, it is still slightly slower.
     """
     if len(a) <= 1:
         return a
@@ -104,15 +105,15 @@ def merge_sort_recursive(a):
     sorted_output = []
     left_index = right_index = 0
     while len(left_half) + len(right_half) > len(sorted_output):
-        if len(left_half) == left_index or len(right_half) == right_index:
-            if len(left_half) == left_index:
+        if left_index == len(left_half) or right_index == len(right_half):
+            if left_index == len(left_half):
                 sorted_output += right_half[right_index:]
             else:
                 sorted_output += left_half[left_index:]
             continue
         left_min = left_half[left_index]
         right_min = right_half[right_index]
-        if left_min < right_min:
+        if left_min <= right_min:
             sorted_output.append(left_min)
             left_index += 1
         else:
@@ -169,3 +170,47 @@ def merge(left, right):
             result += right[index_right:]
             break
     return result
+
+
+def count_inversions(A):
+    """Count inversions of an array.
+
+    Inversions are pairs of array indices (i, j) where i < j and A[i] > A[j].
+    A sorted array has zero inversions.
+
+    Input:
+    a -- unsorted array of n numbers
+    returns: sorted input array, number of inversions
+    """
+    if len(A) <= 1:
+        return A, 0
+    if len(A) % 2 == 0:
+        n = int(len(A) / 2)
+    else:
+        n = int(len(A) / 2 + 1)
+    left_array = A[:n]
+    right_array = A[n:]
+    left_half, left_inversions = count_inversions(left_array)
+    right_half, right_inversions = count_inversions(right_array)
+
+    sorted_output = []
+    left_index = right_index = 0
+    split_inversions = 0
+    while len(left_half) + len(right_half) > len(sorted_output):
+        if left_index == len(left_half) or right_index == len(right_half):
+            if left_index == len(left_half):
+                sorted_output += right_half[right_index:]
+            else:
+                sorted_output += left_half[left_index:]
+            continue
+        left_min = left_half[left_index]
+        right_min = right_half[right_index]
+        if left_min <= right_min:
+            sorted_output.append(left_min)
+            left_index += 1
+        else:
+            sorted_output.append(right_min)
+            right_index += 1
+            split_inversions += len(left_half) - left_index
+
+    return sorted_output, left_inversions + right_inversions + split_inversions
