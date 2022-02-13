@@ -20,14 +20,19 @@ def main():
     cProfile.run(f"alg.merge_sort_min({a})")
 
     start = ti.default_timer()
-    alg.merge_sort_real_python(a)
+    alg.merge_sort_min_recursive(a)
     print("Merge sort execution time:", ti.default_timer() - start)
-    cProfile.run(f"alg.merge_sort_real_python({a})")
+    cProfile.run(f"alg.merge_sort_min_recursive({a})")
 
     start = ti.default_timer()
     alg.merge_sort_recursive(a)
     print("Merge sort execution time:", ti.default_timer() - start)
     cProfile.run(f"alg.merge_sort_recursive({a})")
+
+    start = ti.default_timer()
+    alg.merge_sort_real_python(a)
+    print("Merge sort execution time:", ti.default_timer() - start)
+    cProfile.run(f"alg.merge_sort_real_python({a})")
 
 
 if __name__ == "__main__":

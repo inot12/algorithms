@@ -35,11 +35,27 @@ def merge_sort_min(a):
     Input:
     a -- unsorted array of n numbers
     returns: same array, sorted
+    """
+    if len(a) <= 1:
+        return a
 
-    This algorithm splits the array in half and copies those halves into two
-    new arrays. Then it finds the lowest element in each array with the min()
-    function. It merges the sorted arrays by copying over and populating the
-    output array in sorted order. min() is slower than recursion!
+    sorted_output = []
+    while len(a) > 0:
+        sorted_output.append(min(a))
+        a.remove(min(a))
+
+    return sorted_output
+
+
+def merge_sort_min_recursive(a):
+    """
+    Input:
+    a -- unsorted array of n numbers
+    returns: same array, sorted
+
+    This algorithm recursively splits the array in half and finds the lowest
+    element in each subarray with the min() function. It merges the sorted
+    arrays by copying over and populating the output array in sorted order.
     """
     if len(a) <= 1:
         return a
@@ -49,25 +65,27 @@ def merge_sort_min(a):
         n = int(len(a) / 2 + 1)
     left_array = a[:n]
     right_array = a[n:]
+    left_half = merge_sort_recursive(left_array)
+    right_half = merge_sort_recursive(right_array)
 
     sorted_output = []
-    while len(left_array) + len(right_array) > 0:
-        if len(left_array) == 0 or len(right_array) == 0:
-            if len(left_array) == 0:
-                sorted_output.append(min(right_array))
-                right_array.remove(min(right_array))
+    while len(left_half) + len(right_half) > 0:
+        if len(left_half) == 0 or len(right_half) == 0:
+            if len(left_half) == 0:
+                sorted_output.append(min(right_half))
+                right_half.remove(min(right_half))
             else:
-                sorted_output.append(min(left_array))
-                left_array.remove(min(left_array))
+                sorted_output.append(min(left_half))
+                left_half.remove(min(left_half))
             continue
-        left_min = min(left_array)
-        right_min = min(right_array)
+        left_min = min(left_half)
+        right_min = min(right_half)
         if left_min <= right_min:
             sorted_output.append(left_min)
-            left_array.remove(left_min)
+            left_half.remove(left_min)
         else:
             sorted_output.append(right_min)
-            right_array.remove(right_min)
+            right_half.remove(right_min)
 
     return sorted_output
 

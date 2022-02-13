@@ -50,6 +50,19 @@ class MergeSortMinGoodInput(unittest.TestCase):
         self.assertEqual(alg.merge_sort_min([12]), [12])
 
 
+class MergeSortMinRecursiveGoodInput(unittest.TestCase):
+    """Test for good input of function merge_sort_min_recursive()."""
+
+    def test_general_case(self):
+        """merge_sort_min_recursive() should return known results for known
+        values."""
+        self.assertEqual(alg.merge_sort_min_recursive(
+            [7, 2, 4, 5, 3, 4, 8, 1, 5]),
+            [1, 2, 3, 4, 4, 5, 5, 7, 8])
+        self.assertEqual(alg.merge_sort_min_recursive([]), [])
+        self.assertEqual(alg.merge_sort_min_recursive([12]), [12])
+
+
 class MergeSortRecursiveGoodInput(unittest.TestCase):
     """Test for good input of function merge_sort_recursive()."""
 
