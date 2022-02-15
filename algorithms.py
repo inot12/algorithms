@@ -4,8 +4,14 @@ Created on Jan 25, 2022
 @author: inot
 '''
 
+import numpy as np
+
 
 class NotIntegerError(ValueError):
+    pass
+
+
+class MatrixDimensionsError(ValueError):
     pass
 
 
@@ -28,6 +34,58 @@ def karatsuba(x, y):
     bd = karatsuba(b, d)
     ad_bc = karatsuba(a + b, c + d) - bd - ac
     return ac * 10 ** (2 * n) + ad_bc * 10 ** n + bd
+
+
+def strassen(x, y):
+    """Strassen's matrix multiplication algorithm.
+
+    Regarding running time, inferior to the Coppersmith–Winograd algorithm.
+    Works for square matrices with dimensions 2^n x 2^n.
+    Inputs:
+    x -- matrix
+    y -- matrix
+    returns: matrix product of x and y
+
+    ToDo: Extend the implementation to work for matrices that AREN'T 2^n x 2^n.
+    If you have a non-square non 2^n x 2^n, you can create it by adding zeros.
+    """
+    if len(x[0]) != len(y):
+        raise MatrixDimensionsError(
+            'First matrix number of columns must match second matrix number '
+            'of rows.')
+
+    if len(x) == 1 or len(y) == 1:
+        return x * y
+
+    nx = len(x) // 2
+    mx = len(x) // 2
+    ny = len(y) // 2
+    my = len(y) // 2
+
+    A = x[:nx][:, :mx]
+    B = x[:nx][:, mx:]
+    C = x[nx:][:, :mx]
+    D = x[nx:][:, mx:]
+    E = y[:ny][:, :my]
+    F = y[:ny][:, my:]
+    G = y[ny:][:, :my]
+    H = y[ny:][:, my:]
+
+    P1 = strassen(A, F - H)
+    P2 = strassen(A + B, H)
+    P3 = strassen(C + D, E)
+    P4 = strassen(D, G - E)
+    P5 = strassen(A + D, E + H)
+    P6 = strassen(B - D, G + H)
+    P7 = strassen(A - C, E + F)
+
+    z11 = P5 + P4 - P2 + P6
+    z12 = P1 + P2
+    z21 = P3 + P4
+    z22 = P1 + P5 - P3 - P7
+
+    z = np.vstack((np.hstack((z11, z12)), np.hstack((z21, z22))))
+    return z
 
 
 def merge_sort_min(a):

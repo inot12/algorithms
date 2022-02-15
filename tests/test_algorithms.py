@@ -7,6 +7,8 @@ Created on Jan 26, 2022
 
 import unittest
 
+import numpy as np
+
 import algorithms as alg
 
 
@@ -25,7 +27,7 @@ class KaratsubaGoodInput(unittest.TestCase):
 class KaratsubaBadInput(unittest.TestCase):
     """Test for bad input of function karatsuba()."""
 
-    def test_case1(self):
+    def test_bad_input(self):
         """karatusba() should fail if all input values are not integers."""
         self.assertRaises(alg.NotIntegerError, alg.karatsuba, 2361.7, 125)
 
@@ -37,6 +39,59 @@ class KaratsubaBadInput(unittest.TestCase):
     #     with self.assertRaises(ValueError):
     #         calc.divide(10, 0)
     #         calc.divide(10, '1')
+
+
+class StrassenGoodInput(unittest.TestCase):
+    """Test for good input of function strassen()."""
+
+    def setUp(self):
+        # Current implementation does not work for non 2^n x 2^n matrices.
+        # Non 2^n x 2^n matrix does not work.
+        # self.x = np.array([[2, 5, 8, 2],
+        #                    [1, 9, 3, 3],
+        #                    [6, 7, 9, 0],
+        #                    [1, 9, 6, 7],
+        #                    [4, 3, 7, 8]])
+        # self.y = np.array([[1, 8, 7],
+        #                    [9, 8, 5],
+        #                    [6, 2, 3],
+        #                    [7, 9, 4]])
+        # self.z = np.array([[109, 90, 71],
+        #                    [121, 113, 73],
+        #                    [123, 122, 104],
+        #                    [167, 155, 98],
+        #                    [129, 142, 96]])
+
+        # 2^n x 2^n matrix works.
+        self.x = np.array([[2, 5, 8, 2],
+                           [1, 9, 3, 3],
+                           [6, 7, 9, 0],
+                           [4, 3, 7, 8]])
+        self.y = np.array([[1, 8, 7, 5],
+                           [9, 8, 5, 2],
+                           [6, 2, 3, 7],
+                           [7, 9, 4, 1]])
+        self.z = np.array([[109, 90, 71, 78],
+                           [121, 113, 73, 47],
+                           [123, 122, 104, 107],
+                           [129, 142, 96, 83]])
+
+    def test_general_case(self):
+        """strassen() should return known results for known values."""
+        self.assertTrue(np.allclose(alg.strassen(self.x, self.y), self.z))
+
+
+class StrassenBadInput(unittest.TestCase):
+    """Test for bad input of function strassen()."""
+
+    def setUp(self):
+        self.x = np.random.rand(3, 4)
+        self.y = np.random.rand(5, 2)
+
+    def test_bad_input(self):
+        """strassen() should fail if matrix dimensons don't match."""
+        self.assertRaises(alg.MatrixDimensionsError, alg.strassen,
+                          self.x, self.y)
 
 
 class MergeSortMinGoodInput(unittest.TestCase):
